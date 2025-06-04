@@ -1,72 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Offline Camera App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 10px; }
-    video, img, canvas { max-width: 100%; margin: 10px 0; }
-    .gallery img { max-width: 150px; margin: 5px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Refresh Site</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and smooth transitions */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+        }
+        .content-section {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
 </head>
-<body>
-  <h1>Take Photos</h1>
-  <video id="video" autoplay playsinline></video><br>
-  <button id="capture">📷 Take Photo</button>
-  <div class="gallery" id="gallery"></div>
-  <button id="submit">🗑️ Submit (Clear All)</button>
+<body class="flex flex-col min-h-screen">
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-3 py-1 bg-white bg-opacity-20">My No-Refresh Site</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><button class="nav-link text-lg px-4 py-2 rounded-md hover:bg-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-300" data-target="home">Home</button></li>
+                    <li><button class="nav-link text-lg px-4 py-2 rounded-md hover:bg-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-300" data-target="about">About</button></li>
+                    <li><button class="nav-link text-lg px-4 py-2 rounded-md hover:bg-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-300" data-target="contact">Contact</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  <script>
-    const video = document.getElementById('video');
-    const captureBtn = document.getElementById('capture');
-    const gallery = document.getElementById('gallery');
-    const submitBtn = document.getElementById('submit');
+    <main class="flex-grow container mx-auto p-6 md:p-8 lg:p-10">
+        <!-- Content Sections -->
+        <section id="home" class="content-section bg-white p-8 rounded-xl shadow-lg mb-8 md:mb-10 lg:mb-12">
+            <h2 class="text-4xl font-extrabold text-blue-800 mb-6">Welcome Home!</h2>
+            <p class="text-gray-700 text-lg leading-relaxed">
+                This is the home page. Notice how the URL in your browser doesn't change and the page doesn't reload when you navigate between sections. This is achieved using JavaScript to dynamically update the content.
+            </p>
+            <p class="text-gray-600 mt-4">
+                Explore the other sections to see this in action!
+            </p>
+        </section>
 
-    async function initCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'environment' // Use rear camera on mobile
-          },
-          audio: false
+        <section id="about" class="content-section bg-white p-8 rounded-xl shadow-lg mb-8 md:mb-10 lg:mb-12 hidden">
+            <h2 class="text-4xl font-extrabold text-green-700 mb-6">About Us</h2>
+            <p class="text-gray-700 text-lg leading-relaxed">
+                We are dedicated to creating seamless web experiences. This demonstration showcases a fundamental concept in modern web development: Single Page Applications (SPAs).
+            </p>
+            <p class="text-gray-600 mt-4">
+                SPAs offer a faster and more fluid user experience by loading all necessary resources once and then dynamically updating content as the user interacts.
+            </p>
+        </section>
+
+        <section id="contact" class="content-section bg-white p-8 rounded-xl shadow-lg mb-8 md:mb-10 lg:mb-12 hidden">
+            <h2 class="text-4xl font-extrabold text-purple-700 mb-6">Contact Us</h2>
+            <p class="text-gray-700 text-lg leading-relaxed">
+                Feel free to reach out to us! While this is just a demo, in a real application, you'd find a contact form or contact information here.
+            </p>
+            <p class="text-gray-600 mt-4">
+                You can reach us at <a href="mailto:info@example.com" class="text-blue-500 hover:underline">info@example.com</a>.
+            </p>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-auto shadow-inner">
+        <div class="container mx-auto">
+            <p class="text-sm">&copy; 2025 No-Refresh Site. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get all navigation buttons
+        const navLinks = document.querySelectorAll('.nav-link');
+        // Get all content sections
+        const contentSections = document.querySelectorAll('.content-section');
+
+        /**
+         * Hides all content sections.
+         */
+        function hideAllSections() {
+            contentSections.forEach(section => {
+                section.classList.add('hidden');
+                section.style.opacity = '0'; // Set opacity to 0 for fade-out effect
+            });
+        }
+
+        /**
+         * Shows a specific content section with a fade-in effect.
+         * @param {string} targetId - The ID of the section to show.
+         */
+        function showSection(targetId) {
+            hideAllSections(); // Hide all sections first
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                // Use a timeout to allow the 'hidden' class to apply before removing it
+                setTimeout(() => {
+                    targetSection.classList.remove('hidden');
+                    // Trigger reflow to ensure transition works
+                    void targetSection.offsetWidth;
+                    targetSection.style.opacity = '1'; // Set opacity to 1 for fade-in effect
+                }, 10); // Small delay
+            }
+        }
+
+        // Add click event listeners to navigation links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                // Get the target section ID from the data-target attribute
+                const targetId = event.target.dataset.target;
+                showSection(targetId);
+            });
         });
-        video.srcObject = stream;
-      } catch (err) {
-        alert('Camera access failed: ' + err.message);
-      }
-    }
 
-    function loadImages() {
-      gallery.innerHTML = '';
-      const images = JSON.parse(localStorage.getItem('capturedImages') || '[]');
-      images.forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        gallery.appendChild(img);
-      });
-    }
+        // Show the home section by default when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('home');
 
-    captureBtn.onclick = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      const imageData = canvas.toDataURL('image/png');
-
-      const images = JSON.parse(localStorage.getItem('capturedImages') || '[]');
-      images.push(imageData);
-      localStorage.setItem('capturedImages', JSON.stringify(images));
-      loadImages();
-    };
-
-    submitBtn.onclick = () => {
-      localStorage.removeItem('capturedImages');
-      location.reload();
-    };
-
-    loadImages();
-    initCamera();
-  </script>
+            // Register Service Worker for offline capabilities
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then(registration => {
+                            console.log('Service Worker registered successfully:', registration);
+                        })
+                        .catch(error => {
+                            console.error('Service Worker registration failed:', error);
+                        });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
