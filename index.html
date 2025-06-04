@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Offline Camera App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 10px; }
+    video, img, canvas { max-width: 100%; margin: 10px 0; }
+    .gallery img { max-width: 150px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Take Photos</h1>
+  <video id="video" autoplay playsinline></video><br>
+  <button id="capture">📷 Take Photo</button>
+  <div class="gallery" id="gallery"></div>
+  <button id="submit">🗑️ Submit (Clear All)</button>
+
+  <script>
+    const video = document.getElementById('video');
+    const captureBtn = document.getElementById('capture');
+    const gallery = document.getElementById('gallery');
+    const submitBtn = document.getElementById('submit');
+
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment' // Use rear camera on mobile
+          },
+          audio: false
+        });
+        video.srcObject = stream;
+      } catch (err) {
+        alert('Camera access failed: ' + err.message);
+      }
+    }
+
+    function loadImages() {
+      gallery.innerHTML = '';
+      const images = JSON.parse(localStorage.getItem('capturedImages') || '[]');
+      images.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        gallery.appendChild(img);
+      });
+    }
+
+    captureBtn.onclick = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      const imageData = canvas.toDataURL('image/png');
+
+      const images = JSON.parse(localStorage.getItem('capturedImages') || '[]');
+      images.push(imageData);
+      localStorage.setItem('capturedImages', JSON.stringify(images));
+      loadImages();
+    };
+
+    submitBtn.onclick = () => {
+      localStorage.removeItem('capturedImages');
+      location.reload();
+    };
+
+    loadImages();
+    initCamera();
+  </script>
+</body>
+</html>
